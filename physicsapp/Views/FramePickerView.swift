@@ -57,6 +57,16 @@ struct FramePickerView: View {
     @State private var showingHistory = false
     @State private var deltaTimeHistory: [DeltaTimeEntry] = []
 
+    // Button press states for scaling animation
+    @State private var photoPickerButtonPressed = false
+    @State private var historyButtonPressed = false
+    @State private var resetButtonPressed = false
+    @State private var playButtonPressed = false
+    @State private var timestampButtonPressed = false
+    @State private var previousButtonPressed = false
+    @State private var nextButtonPressed = false
+    @State private var emptyViewButtonPressed = false
+
     // Calculate delta time
     private var deltaTime: Double? {
         if let start = startTime, let end = endTime {
@@ -127,23 +137,13 @@ struct FramePickerView: View {
                             HStack {
                                 HStack(spacing: 20) {
                                     HStack(alignment: .top, spacing: 4) {
-                                        if let delta = deltaTime {
-                                            Text(formatTime(delta))
-                                                .font(.system(size: 16, weight: .semibold))
-                                                .foregroundColor(.white)
-                                                .contentTransition(.numericText())
-                                            Text("ΔT")
-                                                .font(.system(size: 12, weight: .semibold))
-                                                .foregroundColor(.secondary)
-                                        } else {
-                                            Text("-")
-                                                .font(.system(size: 16, weight: .semibold))
-                                                .foregroundColor(.white)
-                                                .contentTransition(.numericText())
-                                            Text("ΔT")
-                                                .font(.system(size: 12, weight: .semibold))
-                                                .foregroundColor(.secondary)
-                                        }
+                                        Text(formatTime(deltaTime))
+                                            .font(.system(size: 16, weight: .semibold))
+                                            .foregroundColor(.white)
+                                            .contentTransition(.numericText())
+                                        Text("ΔT")
+                                            .font(.system(size: 12, weight: .semibold))
+                                            .foregroundColor(.secondary)
                                     }
                                     HStack(alignment: .top, spacing: 4) {
                                         if let fps = fps {
@@ -180,28 +180,59 @@ struct FramePickerView: View {
                                     if isLoadingNewVideo {
                                         ProgressView()
                                             .progressViewStyle(
-                                                CircularProgressViewStyle(tint: .white)
+                                                CircularProgressViewStyle(tint: .yellow)
                                             )
                                             .scaleEffect(0.8)
                                     } else {
                                         Image(systemName: "photo.on.rectangle.angled")
                                             .frame(width: 24, height: 24)
                                             .fontWeight(.semibold)
-                                            .foregroundStyle(.white)
+                                            .foregroundStyle(isLoadingNewVideo ? .yellow : .white)
                                     }
                                 }
 
                             }
                             .disabled(isLoadingNewVideo)
+                            .scaleEffect(photoPickerButtonPressed ? 0.9 : 1.0)
+                            .animation(
+                                .smooth(duration: 0.1, extraBounce: 0),
+                                value: photoPickerButtonPressed
+                            )
+                            .simultaneousGesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged { _ in
+                                        if !photoPickerButtonPressed {
+                                            photoPickerButtonPressed = true
+                                        }
+                                    }
+                                    .onEnded { _ in
+                                        photoPickerButtonPressed = false
+                                    }
+                            )
                             Button(action: { showingHistory = true }) {
                                 HStack(spacing: 8) {
                                     Image(systemName: "clock.arrow.circlepath")
                                         .frame(width: 24, height: 24)
                                         .fontWeight(.semibold)
-                                        .foregroundStyle(.white)
+                                        .foregroundStyle(showingHistory ? .yellow : .white)
                                 }
 
                             }
+                            .scaleEffect(historyButtonPressed ? 0.9 : 1.0)
+                            .animation(
+                                .smooth(duration: 0.1, extraBounce: 0), value: historyButtonPressed
+                            )
+                            .simultaneousGesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged { _ in
+                                        if !historyButtonPressed {
+                                            historyButtonPressed = true
+                                        }
+                                    }
+                                    .onEnded { _ in
+                                        historyButtonPressed = false
+                                    }
+                            )
 
                             // Development reset button (debug builds only)
                             #if DEBUG
@@ -213,6 +244,22 @@ struct FramePickerView: View {
                                             .foregroundStyle(.red)
                                     }
                                 }
+                                .scaleEffect(resetButtonPressed ? 0.9 : 1.0)
+                                .animation(
+                                    .smooth(duration: 0.1, extraBounce: 0),
+                                    value: resetButtonPressed
+                                )
+                                .simultaneousGesture(
+                                    DragGesture(minimumDistance: 0)
+                                        .onChanged { _ in
+                                            if !resetButtonPressed {
+                                                resetButtonPressed = true
+                                            }
+                                        }
+                                        .onEnded { _ in
+                                            resetButtonPressed = false
+                                        }
+                                )
                             #endif
                         }.padding(
                             EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12)
@@ -246,6 +293,21 @@ struct FramePickerView: View {
                                 .cornerRadius(15)
                             }
                             .disabled(isEmptyVideoState)
+                            .scaleEffect(playButtonPressed ? 0.9 : 1.0)
+                            .animation(
+                                .smooth(duration: 0.1, extraBounce: 0), value: playButtonPressed
+                            )
+                            .simultaneousGesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged { _ in
+                                        if !playButtonPressed {
+                                            playButtonPressed = true
+                                        }
+                                    }
+                                    .onEnded { _ in
+                                        playButtonPressed = false
+                                    }
+                            )
 
                             // Timestamp button (camera record style)
                             Button(action: handleTimestampAction) {
@@ -271,7 +333,9 @@ struct FramePickerView: View {
                                 }
                             }
                             .disabled(isEmptyVideoState)
-                            .animation(.bouncy(duration: 0.3), value: isInRecordingState())
+                            .animation(
+                                .smooth(duration: 0.3, extraBounce: 0), value: isInRecordingState()
+                            )
 
                         }
                         .padding(.bottom, 20)
@@ -298,6 +362,21 @@ struct FramePickerView: View {
                                 .cornerRadius(15)
                         }
                         .disabled(isEmptyVideoState)
+                        .scaleEffect(previousButtonPressed ? 0.9 : 1.0)
+                        .animation(
+                            .smooth(duration: 0.1, extraBounce: 0), value: previousButtonPressed
+                        )
+                        .simultaneousGesture(
+                            DragGesture(minimumDistance: 0)
+                                .onChanged { _ in
+                                    if !previousButtonPressed {
+                                        previousButtonPressed = true
+                                    }
+                                }
+                                .onEnded { _ in
+                                    previousButtonPressed = false
+                                }
+                        )
 
                         // Timeline with markers in VStack with time display
                         VStack(spacing: 8) {
@@ -422,7 +501,7 @@ struct FramePickerView: View {
                             // Time display HStack below just the scrubber
                             HStack {
                                 // Current time
-                                Text(formatTime(currentTime))
+                                Text(formatVideoTime(currentTime))
                                     .font(.system(size: 14, weight: .medium))
                                     .foregroundColor(.white)
                                     .contentTransition(.numericText())
@@ -430,7 +509,7 @@ struct FramePickerView: View {
                                 Spacer()
 
                                 // Video duration
-                                Text(formatTime(videoDuration))
+                                Text(formatVideoTime(videoDuration))
                                     .font(.system(size: 14, weight: .medium))
                                     .foregroundColor(.white.opacity(0.7))
                             }
@@ -449,6 +528,19 @@ struct FramePickerView: View {
                                 .cornerRadius(15)
                         }
                         .disabled(isEmptyVideoState)
+                        .scaleEffect(nextButtonPressed ? 0.9 : 1.0)
+                        .animation(.smooth(duration: 0.1, extraBounce: 0), value: nextButtonPressed)
+                        .simultaneousGesture(
+                            DragGesture(minimumDistance: 0)
+                                .onChanged { _ in
+                                    if !nextButtonPressed {
+                                        nextButtonPressed = true
+                                    }
+                                }
+                                .onEnded { _ in
+                                    nextButtonPressed = false
+                                }
+                        )
                     }
                 }
                 .padding(.horizontal, 20)
@@ -803,20 +895,6 @@ struct FramePickerView: View {
         onDismiss()
     }
 
-    // Format time string with minimum data
-    func formatTime(_ time: Double) -> String {
-        let minutes = Int(time) / 60
-        let remainingSeconds = time.truncatingRemainder(dividingBy: 60)
-
-        if minutes > 0 {
-            // Show minutes and seconds with milliseconds (e.g., "1m 1.106s")
-            return String(format: "%dm %.3fs", minutes, remainingSeconds)
-        } else {
-            // Show only seconds with milliseconds (e.g., "1.106s")
-            return String(format: "%.3fs", remainingSeconds)
-        }
-    }
-
     // Get timestamp button SF symbol name
     func getTimestampButtonSymbol() -> String {
         let timeTolerance = 0.1
@@ -842,10 +920,41 @@ struct FramePickerView: View {
     }
 }
 
+// Format time string with minimum data
+func formatTime(_ time: Double) -> String {
+    let minutes = Int(time) / 60
+    let remainingSeconds = time.truncatingRemainder(dividingBy: 60)
+
+    if minutes > 0 {
+        // Show minutes and seconds with milliseconds (e.g., "1m 1.106s")
+        return String(format: "%dm %.3fs", minutes, remainingSeconds)
+    } else {
+        // Show only seconds with milliseconds (e.g., "1.106s")
+        return String(format: "%.3fs", remainingSeconds)
+    }
+}
+
+// Format time string with optional handling
+func formatTime(_ time: Double?) -> String {
+    guard let time = time else { return "-" }
+    return formatTime(time)
+}
+
+// Format time for video playback display (m:ss:milliseconds)
+func formatVideoTime(_ time: Double) -> String {
+    let totalSeconds = Int(time)
+    let minutes = totalSeconds / 60
+    let seconds = totalSeconds % 60
+    let milliseconds = Int((time.truncatingRemainder(dividingBy: 1)) * 1000)
+
+    return String(format: "%d:%02d:%03d", minutes, seconds, milliseconds)
+}
+
 // History view for displaying previous delta times
 struct DeltaTimeHistoryView: View {
     let history: [DeltaTimeEntry]
     @Environment(\.dismiss) private var dismiss
+    @State private var doneButtonPressed = false
 
     var body: some View {
         NavigationView {
@@ -907,26 +1016,30 @@ struct DeltaTimeHistoryView: View {
                     Button("Done") {
                         dismiss()
                     }
+                    .scaleEffect(doneButtonPressed ? 0.9 : 1.0)
+                    .animation(.smooth(duration: 0.1, extraBounce: 0), value: doneButtonPressed)
+                    .simultaneousGesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { _ in
+                                if !doneButtonPressed {
+                                    doneButtonPressed = true
+                                }
+                            }
+                            .onEnded { _ in
+                                doneButtonPressed = false
+                            }
+                    )
                 }
             }
         }
     }
 
-    private func formatTime(_ time: Double) -> String {
-        let minutes = Int(time) / 60
-        let remainingSeconds = time.truncatingRemainder(dividingBy: 60)
-
-        if minutes > 0 {
-            return String(format: "%dm %.3fs", minutes, remainingSeconds)
-        } else {
-            return String(format: "%.3fs", remainingSeconds)
-        }
-    }
 }
 
 // Empty state view when no video is selected
 struct EmptyVideoStateView: View {
     @Binding var selectedItem: PhotosPickerItem?
+    @State private var emptyViewButtonPressed = false
 
     var body: some View {
         VStack(spacing: 30) {
@@ -934,12 +1047,12 @@ struct EmptyVideoStateView: View {
 
             // Large video icon
             Image(systemName: "video.badge.plus")
-                .font(.system(size: 80, weight: .light))
+                .font(.system(size: 80, weight: .semibold))
                 .foregroundColor(.white.opacity(0.6))
 
             // Main text
             VStack(spacing: 12) {
-                Text("Upload a Video")
+                Text("Upload a video")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
@@ -964,6 +1077,19 @@ struct EmptyVideoStateView: View {
                 .background(Color.white)
                 .cornerRadius(25)
             }
+            .scaleEffect(emptyViewButtonPressed ? 0.9 : 1.0)
+            .animation(.smooth(duration: 0.1, extraBounce: 0), value: emptyViewButtonPressed)
+            .simultaneousGesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { _ in
+                        if !emptyViewButtonPressed {
+                            emptyViewButtonPressed = true
+                        }
+                    }
+                    .onEnded { _ in
+                        emptyViewButtonPressed = false
+                    }
+            )
 
             Spacer()
         }

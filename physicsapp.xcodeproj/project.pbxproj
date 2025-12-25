@@ -6,10 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		32FA3A5A2E98AB5A00A48C3C /* NotchMyProblem in Frameworks */ = {isa = PBXBuildFile; productRef = 32FA3A592E98AB5A00A48C3C /* NotchMyProblem */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		3201F4BD2E766A8A001614D2 /* physicsapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = physicsapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -40,7 +36,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				32FA3A5A2E98AB5A00A48C3C /* NotchMyProblem in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,7 +78,6 @@
 			);
 			name = physicsapp;
 			packageProductDependencies = (
-				32FA3A592E98AB5A00A48C3C /* NotchMyProblem */,
 			);
 			productName = physicsapp;
 			productReference = 3201F4BD2E766A8A001614D2 /* physicsapp.app */;
@@ -114,7 +108,6 @@
 			mainGroup = 3201F4B42E766A8A001614D2;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				32FA3A582E98AB5A00A48C3C /* XCRemoteSwiftPackageReference "NotchMyProblem" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3201F4BE2E766A8A001614D2 /* Products */;
@@ -364,25 +357,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		32FA3A582E98AB5A00A48C3C /* XCRemoteSwiftPackageReference "NotchMyProblem" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Aeastr/NotchMyProblem.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.1;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		32FA3A592E98AB5A00A48C3C /* NotchMyProblem */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 32FA3A582E98AB5A00A48C3C /* XCRemoteSwiftPackageReference "NotchMyProblem" */;
-			productName = NotchMyProblem;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3201F4B52E766A8A001614D2 /* Project object */;
 }

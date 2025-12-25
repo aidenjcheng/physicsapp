@@ -24,6 +24,7 @@ struct physicsappApp: App {
                         .fontDesign(.rounded)
                 }
             }
+            .preferredColorScheme(.dark)
             #if DEBUG
             .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ResetAppData"))) { _ in
                 // Reset onboarding state to show tutorial again

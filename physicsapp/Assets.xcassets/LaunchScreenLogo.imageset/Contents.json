@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "apple_logo_PNG19674-2241375914.png",
+      "filename" : "nosparkle.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "apple_logo_PNG19674-2241375914 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "apple_logo_PNG19674-2241375914 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
