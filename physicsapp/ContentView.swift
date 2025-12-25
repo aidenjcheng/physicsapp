@@ -8,14 +8,18 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var selectedVideo: VideoData?
+    @State private var startTime: Double?
+    @State private var endTime: Double?
+    @State private var duration: Double?
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        VideoTimestampView(
+            selectedVideo: $selectedVideo,
+            startTime: $startTime,
+            endTime: $endTime,
+            duration: $duration
+        )
     }
 }
 
