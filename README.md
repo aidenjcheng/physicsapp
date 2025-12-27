@@ -1,6 +1,8 @@
-# Physics Timer App
+# EZ Physics
 
-## App Features
+## Motive
+
+recording lab data for physics is really annoying so i made an app to make it easier.
 
 | Feature                           | Description                                                                                  | Demo Video                                                                        |
 | --------------------------------- | -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
